@@ -1,0 +1,33 @@
+# FIXED version — the same workflow with all 7 mistakes corrected.
+# Use it as the reference while recording, or swap it in to show the green run.
+name: demo-fixed
+
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Deploy
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: ./deploy.sh

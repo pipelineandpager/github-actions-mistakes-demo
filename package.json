@@ -1,0 +1,1 @@
+{"dependencies":{"lodash":"^4.17.21"},"description":"Tiny demo app for the Pipeline & Pager video: 7 GitHub Actions mistakes, broken and fixed.","engines":{"node":">=20"},"license":"MIT","name":"actions-mistakes-demo","private":true,"scripts":{"start":"node index.js","test":"node --test"},"version":"1.0.0"}

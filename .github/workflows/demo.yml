@@ -1,30 +1,26 @@
 # DEMO — DELIBERATELY BROKEN. Do not copy this into a real project.
-# Each of the 7 mistakes from the video is marked with a MISTAKE comment.
 name: demo
 
 on:
   push:
-  pull_request_target: # MISTAKE 4: runs in the base-repo context, with secrets available
+  pull_request_target:
     types: [opened, synchronize]
 
-# MISTAKE 3: no permissions block — the default GITHUB_TOKEN gets broad write access.
-# MISTAKE 6: no timeout-minutes, no concurrency guard.
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # MISTAKE 4 (continued): checks out the PR's code and runs it.
-      - uses: actions/checkout@main # MISTAKE 2: floating version — main moves
+      - uses: actions/checkout@main
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Show API key
-        run: echo "sk-demo-FAKE-TOKEN-1234" # MISTAKE 1: literal token in the workflow — never masked, visible in the log forever
+        run: echo "sk-demo-FAKE-TOKEN-1234"
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci # MISTAKE 5: no caching — full install on every run
+      - run: npm ci
       - name: Run tests
         run: npm test
-        continue-on-error: true # MISTAKE 7: failures hidden, the run stays green
+        continue-on-error: true
       - name: Deploy
         run: ./deploy.sh
